@@ -4,6 +4,7 @@
   "package": "io.github.boogiemonster1o1.cartses.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "CraftingScreenHandlerAccessor",
     "EntityTypeAccessor"
   ],
   "client": [

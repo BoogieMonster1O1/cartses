@@ -21,6 +21,9 @@
   "entrypoints": {
     "main": [
       "io.github.boogiemonster1o1.cartses.Cartses"
+    ],
+    "client": [
+      "io.github.boogiemonster1o1.cartses.client.CartsesClient"
     ]
   },
   "mixins": [

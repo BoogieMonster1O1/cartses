@@ -1,5 +1,8 @@
 package io.github.boogiemonster1o1.cartses.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.google.common.collect.ImmutableSet;
 import io.github.boogiemonster1o1.cartses.item.CartsesMinecartItem;
 import io.github.boogiemonster1o1.cartses.mixin.EntityTypeAccessor;
@@ -19,17 +22,27 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.fabric.impl.object.builder.FabricEntityType;
 
 public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEntityType<T> {
+	public static final Set<CartsesEntityType<? extends CartsesMinecartEntity>> ALL = new HashSet<>();
+
 	private final Item item;
+	private final Identifier id;
 	private final WorldSpawnFactory<T> worldSpawnFactory;
 
 	public CartsesEntityType(EntityFactory<T> factory, SpawnGroup spawnGroup, boolean bl, boolean summonable, boolean fireImmune, boolean spawnableFarFromPlayer, ImmutableSet<Block> spawnBlocks, EntityDimensions entityDimensions, int maxTrackDistance, int trackTickInterval, Boolean alwaysUpdateVelocity, Identifier id, WorldSpawnFactory<T> worldSpawnFactory) {
 		super(factory, spawnGroup, bl, summonable, fireImmune, spawnableFarFromPlayer, spawnBlocks, entityDimensions, maxTrackDistance, trackTickInterval, alwaysUpdateVelocity);
 		this.item = Registry.register(Registry.ITEM, id, new CartsesMinecartItem(this, new FabricItemSettings().group(ItemGroup.TRANSPORTATION)));
+		this.id = id;
 		this.worldSpawnFactory = worldSpawnFactory;
+		Registry.register(Registry.ENTITY_TYPE, id, this);
+		ALL.add(this);
 	}
 
 	public Item getItem() {
 		return item;
+	}
+
+	public Identifier getId() {
+		return id;
 	}
 
 	public WorldSpawnFactory<T> getWorldSpawnFactory() {
@@ -116,6 +129,10 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 		public CartsesEntityType<T> build() {
 			EntityType<T> og = super.build();
 			return new CartsesEntityType<>(this.factory, og.getSpawnGroup(), og.isSaveable(), og.isSummonable(), og.isFireImmune(), og.isSpawnableFarFromPlayer(), ((EntityTypeAccessor) og).getCanSpawnInside(), og.getDimensions(), og.getMaxTrackDistance(), og.getTrackTickInterval(), og.alwaysUpdateVelocity(), this.id, this.worldSpawnFactory);
+		}
+
+		public static <T extends CartsesMinecartEntity> Builder<T> create(SpawnGroup spawnGroup, EntityType.EntityFactory<T> factory, WorldSpawnFactory<T> worldSpawnFactory) {
+			return new CartsesEntityType.Builder<>(spawnGroup, factory, worldSpawnFactory);
 		}
 	}
 
