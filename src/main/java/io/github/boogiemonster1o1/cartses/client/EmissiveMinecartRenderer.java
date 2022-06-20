@@ -3,13 +3,10 @@ package io.github.boogiemonster1o1.cartses.client;
 import io.github.boogiemonster1o1.cartses.entity.CartsesEntityType;
 import io.github.boogiemonster1o1.cartses.entity.CartsesMinecartEntity;
 
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MinecartEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.math.BlockPos;
-
-import net.fabricmc.fabric.impl.object.builder.FabricEntityType;
 
 public class EmissiveMinecartRenderer<T extends CartsesMinecartEntity> extends MinecartEntityRenderer<T> {
 	public EmissiveMinecartRenderer(EntityRendererFactory.Context ctx, EntityModelLayer layer) {
