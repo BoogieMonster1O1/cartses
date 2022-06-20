@@ -15,7 +15,7 @@ public class CartsesClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		CartsesEntityType.ALL.forEach(type -> {
 			EntityModelLayer layer = new EntityModelLayer(type.getId(), "main");
-			EntityRendererRegistry.register(type, ctx -> new MinecartEntityRenderer<>(ctx, layer));
+			EntityRendererRegistry.register(type, ctx -> new EmissiveMinecartRenderer<>(ctx, layer));
 			EntityModelLayerRegistry.registerModelLayer(layer, MinecartEntityModel::getTexturedModelData);
 		});
 	}

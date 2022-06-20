@@ -3,16 +3,18 @@ package io.github.boogiemonster1o1.cartses.entity.variant;
 import io.github.boogiemonster1o1.cartses.entity.CartsesEntities;
 import io.github.boogiemonster1o1.cartses.entity.CartsesStorageMinecartEntity;
 
+import net.minecraft.block.BarrelBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public class BarrelMinecart extends CartsesStorageMinecartEntity {
-	private static final BlockState STATE = Blocks.BARREL.getDefaultState();
+	private static final BlockState STATE = Blocks.BARREL.getDefaultState().with(BarrelBlock.FACING, Direction.UP);
 
 	public BarrelMinecart(EntityType<?> entityType, World world) {
 		super(entityType, world);
@@ -33,7 +35,7 @@ public class BarrelMinecart extends CartsesStorageMinecartEntity {
 	}
 
 	@Override
-	public BlockState getContainedBlock() {
+	public BlockState getDefaultContainedBlock() {
 		return STATE;
 	}
 }

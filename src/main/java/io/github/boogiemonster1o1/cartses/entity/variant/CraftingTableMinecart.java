@@ -39,7 +39,7 @@ public class CraftingTableMinecart extends CartsesMinecartEntity {
 	}
 
 	@Override
-	public BlockState getContainedBlock() {
+	public BlockState getDefaultContainedBlock() {
 		return STATE;
 	}
 
