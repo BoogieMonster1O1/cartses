@@ -30,10 +30,14 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 
 	public CartsesEntityType(EntityFactory<T> factory, SpawnGroup spawnGroup, boolean bl, boolean summonable, boolean fireImmune, boolean spawnableFarFromPlayer, ImmutableSet<Block> spawnBlocks, EntityDimensions entityDimensions, int maxTrackDistance, int trackTickInterval, Boolean alwaysUpdateVelocity, Identifier id, WorldSpawnFactory<T> worldSpawnFactory) {
 		super(factory, spawnGroup, bl, summonable, fireImmune, spawnableFarFromPlayer, spawnBlocks, entityDimensions, maxTrackDistance, trackTickInterval, alwaysUpdateVelocity);
-		this.item = Registry.register(Registry.ITEM, id, new CartsesMinecartItem(this, new FabricItemSettings().group(ItemGroup.TRANSPORTATION)));
+		this.item = new CartsesMinecartItem(this, new FabricItemSettings().group(ItemGroup.TRANSPORTATION));
 		this.id = id;
 		this.worldSpawnFactory = worldSpawnFactory;
-		Registry.register(Registry.ENTITY_TYPE, id, this);
+		register();
+	}
+	public final void register() {
+		Registry.register(Registry.ENTITY_TYPE, this.id, this);
+		Registry.register(Registry.ITEM, this.id, this.item);
 		ALL.add(this);
 	}
 
@@ -50,12 +54,24 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 	}
 
 	public static class Builder<T extends CartsesMinecartEntity> extends FabricEntityTypeBuilder<T> {
+		private final SpawnGroup spawnGroup;
 		private final WorldSpawnFactory<T> worldSpawnFactory;
+		private EntityType.EntityFactory<T> factory;
 		private Identifier id;
-		private EntityFactory<T> factory;
+		private boolean saveable = true;
+		private boolean summonable = true;
+		private int trackRange = 5;
+		private int trackedUpdateRate = 3;
+		private Boolean forceTrackedVelocityUpdates;
+		private boolean fireImmune = false;
+		private boolean spawnableFarFromPlayer;
+		private EntityDimensions dimensions = EntityDimensions.changing(-1.0f, -1.0f);
+		private ImmutableSet<Block> specificSpawnBlocks = ImmutableSet.of();
 
 		protected Builder(SpawnGroup spawnGroup, EntityFactory<T> factory, WorldSpawnFactory<T> worldSpawnFactory) {
 			super(spawnGroup, factory);
+			this.factory = factory;
+			this.spawnGroup = spawnGroup;
 			this.worldSpawnFactory = worldSpawnFactory;
 		}
 
@@ -72,52 +88,56 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 
 		@Override
 		public Builder<T> disableSummon() {
-			return (Builder<T>) super.disableSummon();
+			this.summonable = false;
+			return this;
 		}
 
 		@Override
 		public Builder<T> disableSaving() {
-			return (Builder<T>) super.disableSaving();
+			this.saveable = false;
+			return this;
 		}
 
 		@Override
 		public Builder<T> fireImmune() {
-			return (Builder<T>) super.fireImmune();
+			this.fireImmune = true;
+			return this;
 		}
 
 		@Override
 		public Builder<T> spawnableFarFromPlayer() {
-			return (Builder<T>) super.spawnableFarFromPlayer();
+			this.spawnableFarFromPlayer = true;
+			return this;
 		}
 
 		@Override
 		public Builder<T> dimensions(EntityDimensions dimensions) {
-			return (Builder<T>) super.dimensions(dimensions);
+			this.dimensions = dimensions;
+			return this;
 		}
 
 		@Override
 		public Builder<T> trackRangeChunks(int range) {
-			return (Builder<T>) super.trackRangeChunks(range);
-		}
-
-		@Override
-		public Builder<T> trackRangeBlocks(int range) {
-			return (Builder<T>) super.trackRangeBlocks(range);
+			this.trackRange = range;
+			return this;
 		}
 
 		@Override
 		public Builder<T> trackedUpdateRate(int rate) {
-			return (Builder<T>) super.trackedUpdateRate(rate);
+			this.trackedUpdateRate = rate;
+			return this;
 		}
 
 		@Override
 		public Builder<T> forceTrackedVelocityUpdates(boolean forceTrackedVelocityUpdates) {
-			return (Builder<T>) super.forceTrackedVelocityUpdates(forceTrackedVelocityUpdates);
+			this.forceTrackedVelocityUpdates = forceTrackedVelocityUpdates;
+			return this;
 		}
 
 		@Override
 		public Builder<T> specificSpawnBlocks(Block... blocks) {
-			return (Builder<T>) super.specificSpawnBlocks(blocks);
+			this.specificSpawnBlocks = ImmutableSet.copyOf(blocks);
+			return this;
 		}
 
 		public Builder<T> id(Identifier id) {
@@ -127,8 +147,7 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 
 		@Override
 		public CartsesEntityType<T> build() {
-			EntityType<T> og = super.build();
-			return new CartsesEntityType<>(this.factory, og.getSpawnGroup(), og.isSaveable(), og.isSummonable(), og.isFireImmune(), og.isSpawnableFarFromPlayer(), ((EntityTypeAccessor) og).getCanSpawnInside(), og.getDimensions(), og.getMaxTrackDistance(), og.getTrackTickInterval(), og.alwaysUpdateVelocity(), this.id, this.worldSpawnFactory);
+			return new CartsesEntityType<>(this.factory, spawnGroup, saveable, summonable, fireImmune, spawnableFarFromPlayer, specificSpawnBlocks, dimensions, trackRange, trackedUpdateRate, forceTrackedVelocityUpdates, this.id, this.worldSpawnFactory);
 		}
 
 		public static <T extends CartsesMinecartEntity> Builder<T> create(SpawnGroup spawnGroup, EntityType.EntityFactory<T> factory, WorldSpawnFactory<T> worldSpawnFactory) {

@@ -11,6 +11,5 @@ public class CartsesEntities {
 	public static final CartsesEntityType<CraftingTableMinecart> CRAFTING_TABLE_MINECART = CartsesEntityType.Builder.create(SpawnGroup.MISC, CraftingTableMinecart::new, CraftingTableMinecart::new).dimensions(EntityDimensions.fixed(0.98f, 0.7f)).trackRangeChunks(8).id(id("crafting_table_minecart")).build();
 
 	public static void init() {
-		// just loads the class
 	}
 }
