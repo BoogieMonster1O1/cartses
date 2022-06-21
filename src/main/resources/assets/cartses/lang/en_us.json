@@ -2,5 +2,6 @@
   "entity.cartses.crafting_table_minecart": "Minecart with Crafting Table",
   "entity.cartses.barrel_minecart": "Minecart with Barrel",
   "entity.cartses.glowstone_minecart": "Minecart with Glowstone",
-  "entity.cartses.redstone_lamp_minecart": "Minecart with Redstone Lamp"
+  "entity.cartses.redstone_lamp_minecart": "Minecart with Redstone Lamp",
+  "entity.cartses.ender_chest_minecart": "Minecart with Ender Chest"
 }
