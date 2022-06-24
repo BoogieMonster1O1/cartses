@@ -17,7 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class RedstoneLampMinecart extends CartsesMinecartEntity {
-	private static final TrackedData<Boolean> POWERED = DataTracker.registerData(CartsesMinecartEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final TrackedData<Boolean> POWERED = DataTracker.registerData(RedstoneLampMinecart.class, TrackedDataHandlerRegistry.BOOLEAN);
 	private static final BlockState STATE = Blocks.REDSTONE_LAMP.getDefaultState();
 	private static final BlockState STATE_POWERED = Blocks.REDSTONE_LAMP.getDefaultState().with(RedstoneLampBlock.LIT, Boolean.TRUE);
 

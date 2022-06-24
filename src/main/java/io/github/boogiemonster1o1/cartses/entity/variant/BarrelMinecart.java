@@ -31,7 +31,7 @@ public class BarrelMinecart extends CartsesStorageMinecartEntity {
 
 	@Override
 	public int size() {
-		return 36;
+		return 27;
 	}
 
 	@Override

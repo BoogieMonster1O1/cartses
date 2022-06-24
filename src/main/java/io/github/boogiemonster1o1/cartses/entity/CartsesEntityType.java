@@ -29,14 +29,16 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 	private final WorldSpawnFactory<T> worldSpawnFactory;
 	private final ToIntFunction<T> blockLightFunction;
 	private final ToIntFunction<T> skyLightFunction;
+	private final boolean noRenderer;
 
-	public CartsesEntityType(EntityFactory<T> factory, SpawnGroup spawnGroup, boolean bl, boolean summonable, boolean fireImmune, boolean spawnableFarFromPlayer, ImmutableSet<Block> spawnBlocks, EntityDimensions entityDimensions, int maxTrackDistance, int trackTickInterval, Boolean alwaysUpdateVelocity, Identifier id, WorldSpawnFactory<T> worldSpawnFactory, ToIntFunction<T> blockLightFunction, ToIntFunction<T> skyLightFunction) {
+	public CartsesEntityType(EntityFactory<T> factory, SpawnGroup spawnGroup, boolean bl, boolean summonable, boolean fireImmune, boolean spawnableFarFromPlayer, ImmutableSet<Block> spawnBlocks, EntityDimensions entityDimensions, int maxTrackDistance, int trackTickInterval, Boolean alwaysUpdateVelocity, Identifier id, WorldSpawnFactory<T> worldSpawnFactory, ToIntFunction<T> blockLightFunction, ToIntFunction<T> skyLightFunction, boolean noRenderer) {
 		super(factory, spawnGroup, bl, summonable, fireImmune, spawnableFarFromPlayer, spawnBlocks, entityDimensions, maxTrackDistance, trackTickInterval, alwaysUpdateVelocity);
 		this.blockLightFunction = blockLightFunction;
 		this.skyLightFunction = skyLightFunction;
 		this.item = new CartsesMinecartItem(this, new FabricItemSettings().group(ItemGroup.TRANSPORTATION));
 		this.id = id;
 		this.worldSpawnFactory = worldSpawnFactory;
+		this.noRenderer = noRenderer;
 		register();
 	}
 	public final void register() {
@@ -55,6 +57,10 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 
 	public Item getItem() {
 		return item;
+	}
+
+	public boolean noRenderer() {
+		return noRenderer;
 	}
 
 	public Identifier getId() {
@@ -81,6 +87,7 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 		private ImmutableSet<Block> specificSpawnBlocks = ImmutableSet.of();
 		private ToIntFunction<T> blockLightFunction = cart -> -1;
 		private ToIntFunction<T> skyLightFunction = cart -> -1;
+		private boolean noRenderer = false;
 
 		protected Builder(SpawnGroup spawnGroup, EntityFactory<T> factory, WorldSpawnFactory<T> worldSpawnFactory) {
 			super(spawnGroup, factory);
@@ -103,6 +110,11 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 		@Override
 		public Builder<T> disableSummon() {
 			this.summonable = false;
+			return this;
+		}
+
+		public Builder<T> noRender() {
+			this.noRenderer = true;
 			return this;
 		}
 
@@ -171,7 +183,7 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 
 		@Override
 		public CartsesEntityType<T> build() {
-			return new CartsesEntityType<>(this.factory, spawnGroup, saveable, summonable, fireImmune, spawnableFarFromPlayer, specificSpawnBlocks, dimensions, trackRange, trackedUpdateRate, forceTrackedVelocityUpdates, this.id, this.worldSpawnFactory, this.blockLightFunction, this.skyLightFunction);
+			return new CartsesEntityType<>(this.factory, spawnGroup, saveable, summonable, fireImmune, spawnableFarFromPlayer, specificSpawnBlocks, dimensions, trackRange, trackedUpdateRate, forceTrackedVelocityUpdates, this.id, this.worldSpawnFactory, this.blockLightFunction, this.skyLightFunction, this.noRenderer);
 		}
 
 		public static <T extends CartsesMinecartEntity> Builder<T> create(SpawnGroup spawnGroup, EntityType.EntityFactory<T> factory, WorldSpawnFactory<T> worldSpawnFactory) {

@@ -2,7 +2,6 @@ package io.github.boogiemonster1o1.cartses.client;
 
 import io.github.boogiemonster1o1.cartses.entity.CartsesEntityType;
 
-import net.minecraft.client.render.entity.MinecartEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.render.entity.model.MinecartEntityModel;
 
@@ -15,8 +14,11 @@ public class CartsesClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		CartsesEntityType.ALL.forEach(type -> {
 			EntityModelLayer layer = new EntityModelLayer(type.getId(), "main");
-			EntityRendererRegistry.register(type, ctx -> new EmissiveMinecartRenderer<>(ctx, layer));
 			EntityModelLayerRegistry.registerModelLayer(layer, MinecartEntityModel::getTexturedModelData);
+			if (type.noRenderer()) {
+				return;
+			}
+			EntityRendererRegistry.register(type, ctx -> new EmissiveMinecartRenderer<>(ctx, layer));
 		});
 	}
 }
