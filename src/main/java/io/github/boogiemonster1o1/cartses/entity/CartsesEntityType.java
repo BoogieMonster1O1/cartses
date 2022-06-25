@@ -31,11 +31,15 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 	private final ToIntFunction<T> skyLightFunction;
 	private final boolean noRenderer;
 
-	public CartsesEntityType(EntityFactory<T> factory, SpawnGroup spawnGroup, boolean bl, boolean summonable, boolean fireImmune, boolean spawnableFarFromPlayer, ImmutableSet<Block> spawnBlocks, EntityDimensions entityDimensions, int maxTrackDistance, int trackTickInterval, Boolean alwaysUpdateVelocity, Identifier id, WorldSpawnFactory<T> worldSpawnFactory, ToIntFunction<T> blockLightFunction, ToIntFunction<T> skyLightFunction, boolean noRenderer) {
+	public CartsesEntityType(EntityFactory<T> factory, SpawnGroup spawnGroup, boolean bl, boolean summonable, boolean fireImmune, boolean spawnableFarFromPlayer, ImmutableSet<Block> spawnBlocks, EntityDimensions entityDimensions, int maxTrackDistance, int trackTickInterval, Boolean alwaysUpdateVelocity, Identifier id, WorldSpawnFactory<T> worldSpawnFactory, ToIntFunction<T> blockLightFunction, ToIntFunction<T> skyLightFunction, boolean noRenderer, CustomItemFactory itemFactory) {
 		super(factory, spawnGroup, bl, summonable, fireImmune, spawnableFarFromPlayer, spawnBlocks, entityDimensions, maxTrackDistance, trackTickInterval, alwaysUpdateVelocity);
 		this.blockLightFunction = blockLightFunction;
 		this.skyLightFunction = skyLightFunction;
-		this.item = new CartsesMinecartItem(this, new FabricItemSettings().group(ItemGroup.TRANSPORTATION));
+		if (itemFactory == null) {
+			this.item = new CartsesMinecartItem(this, new FabricItemSettings().group(ItemGroup.TRANSPORTATION));
+		} else {
+			this.item = itemFactory.create(this, new FabricItemSettings().group(ItemGroup.TRANSPORTATION));
+		}
 		this.id = id;
 		this.worldSpawnFactory = worldSpawnFactory;
 		this.noRenderer = noRenderer;
@@ -88,6 +92,7 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 		private ToIntFunction<T> blockLightFunction = cart -> -1;
 		private ToIntFunction<T> skyLightFunction = cart -> -1;
 		private boolean noRenderer = false;
+		private CustomItemFactory customItemFactory;
 
 		protected Builder(SpawnGroup spawnGroup, EntityFactory<T> factory, WorldSpawnFactory<T> worldSpawnFactory) {
 			super(spawnGroup, factory);
@@ -105,6 +110,11 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 		public <N extends T> Builder<N> entityFactory(EntityFactory<N> factory) {
 			this.factory = (EntityFactory<T>) factory;
 			return (Builder<N>) super.entityFactory(factory);
+		}
+
+		public Builder<T> customItemFactory(CustomItemFactory customItemFactory) {
+			this.customItemFactory = customItemFactory;
+			return this;
 		}
 
 		@Override
@@ -183,7 +193,7 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 
 		@Override
 		public CartsesEntityType<T> build() {
-			return new CartsesEntityType<>(this.factory, spawnGroup, saveable, summonable, fireImmune, spawnableFarFromPlayer, specificSpawnBlocks, dimensions, trackRange, trackedUpdateRate, forceTrackedVelocityUpdates, this.id, this.worldSpawnFactory, this.blockLightFunction, this.skyLightFunction, this.noRenderer);
+			return new CartsesEntityType<>(this.factory, spawnGroup, saveable, summonable, fireImmune, spawnableFarFromPlayer, specificSpawnBlocks, dimensions, trackRange, trackedUpdateRate, forceTrackedVelocityUpdates, this.id, this.worldSpawnFactory, this.blockLightFunction, this.skyLightFunction, this.noRenderer, this.customItemFactory);
 		}
 
 		public static <T extends CartsesMinecartEntity> Builder<T> create(SpawnGroup spawnGroup, EntityType.EntityFactory<T> factory, WorldSpawnFactory<T> worldSpawnFactory) {
@@ -194,5 +204,9 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 	@FunctionalInterface
 	public interface WorldSpawnFactory<T extends CartsesMinecartEntity> {
 		T create(World world, double x, double y, double z);
+	}
+
+	public interface CustomItemFactory {
+		Item create(CartsesEntityType<?> type, Item.Settings settings);
 	}
 }

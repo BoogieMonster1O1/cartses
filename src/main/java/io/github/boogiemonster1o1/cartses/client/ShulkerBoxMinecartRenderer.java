@@ -22,6 +22,7 @@ public class ShulkerBoxMinecartRenderer extends EmissiveMinecartRenderer<Shulker
 		} else {
 			DyeColor dye = DyeColor.byId(color);
 			// TODO
+			super.renderBlock(entity, delta, state, matrices, vertexConsumers, light);
 		}
 	}
 }

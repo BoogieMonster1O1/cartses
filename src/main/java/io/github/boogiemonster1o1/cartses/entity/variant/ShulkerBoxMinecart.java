@@ -6,11 +6,13 @@ import io.github.boogiemonster1o1.cartses.entity.CartsesStorageMinecartEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.DyeColor;
 import net.minecraft.world.World;
@@ -50,6 +52,8 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 		this.dataTracker.set(DYE_COLOR, color);
 	}
 
+
+
 	public ItemStack getShulkerBoxAsItem() {
 		return null; // TODO
 	}
@@ -57,5 +61,10 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 	@Override
 	public BlockState getDefaultContainedBlock() {
 		return STATE_TEMP;
+	}
+
+	@Override
+	public void dropItems(DamageSource damageSource) {
+		super.dropItems(damageSource);
 	}
 }
