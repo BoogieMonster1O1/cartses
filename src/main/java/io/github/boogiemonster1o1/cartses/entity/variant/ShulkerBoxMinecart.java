@@ -5,7 +5,6 @@ import io.github.boogiemonster1o1.cartses.entity.CartsesStorageMinecartEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
@@ -17,13 +16,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -71,6 +70,13 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 					player.getStackInHand(hand).decrement(1);
 				}
 				this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_SLIME_SQUISH, SoundCategory.NEUTRAL, 1.0F, 1.0F);
+			}
+			if (item == Items.WATER_BUCKET) {
+				this.setDyeColor(-1);
+				if (!player.isCreative()) {
+					player.getStackInHand(hand).decrement(1);
+				}
+				this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.NEUTRAL, 1.0F, 1.0F);
 			}
 			return ActionResult.CONSUME;
 		}
