@@ -42,7 +42,7 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 	@Override
 	protected void initDataTracker() {
 		super.initDataTracker();
-		this.dataTracker.startTracking(DYE_COLOR, DyeColor.PURPLE.getId());
+		this.dataTracker.startTracking(DYE_COLOR, -1);
 	}
 
 	@Override
