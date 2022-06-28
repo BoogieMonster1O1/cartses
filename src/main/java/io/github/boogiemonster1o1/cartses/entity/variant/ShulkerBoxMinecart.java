@@ -10,11 +10,16 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.DyeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
@@ -52,10 +57,22 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 		this.dataTracker.set(DYE_COLOR, color);
 	}
 
-
-
-	public ItemStack getShulkerBoxAsItem() {
-		return null; // TODO
+	@Override
+	public ActionResult interact(PlayerEntity player, Hand hand) {
+		if (player.isSneaking()) {
+			if (world.isClient) {
+				return ActionResult.SUCCESS;
+			}
+			Item item = player.getStackInHand(hand).getItem();
+			if (item instanceof DyeItem && ((DyeItem) item).getColor().getId() != this.getDyeColor()) {
+				this.setDyeColor(((DyeItem) item).getColor().getId());
+				if (!player.isCreative()) {
+					player.getStackInHand(hand).decrement(1);
+				}
+			}
+			return ActionResult.CONSUME;
+		}
+		return super.interact(player, hand);
 	}
 
 	@Override
