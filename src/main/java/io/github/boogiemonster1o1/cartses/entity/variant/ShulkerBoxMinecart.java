@@ -17,6 +17,7 @@ import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -44,11 +45,6 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 	}
 
 	@Override
-	protected ScreenHandler getScreenHandler(int var1, PlayerInventory var2) {
-		return null;
-	}
-
-	@Override
 	public int size() {
 		return 27;
 	}
@@ -63,21 +59,26 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand) {
-//		if (player.isSneaking()) {
-//			if (world.isClient) {
-//				return ActionResult.SUCCESS;
-//			}
-//			Item item = player.getStackInHand(hand).getItem();
-//			if (item instanceof DyeItem && ((DyeItem) item).getColor().getId() != this.getDyeColor()) {
-//				this.setDyeColor(((DyeItem) item).getColor().getId());
-//				if (!player.isCreative()) {
-//					player.getStackInHand(hand).decrement(1);
-//				}
-//				this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_SLIME_SQUISH, SoundCategory.NEUTRAL, 1.0F, 1.0F);
-//			}
-//			return ActionResult.CONSUME;
-//		}
+		if (player.isSneaking()) {
+			if (world.isClient) {
+				return ActionResult.SUCCESS;
+			}
+			Item item = player.getStackInHand(hand).getItem();
+			if (item instanceof DyeItem && ((DyeItem) item).getColor().getId() != this.getDyeColor()) {
+				this.setDyeColor(((DyeItem) item).getColor().getId());
+				if (!player.isCreative()) {
+					player.getStackInHand(hand).decrement(1);
+				}
+				this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_SLIME_SQUISH, SoundCategory.NEUTRAL, 1.0F, 1.0F);
+			}
+			return ActionResult.CONSUME;
+		}
 		return super.interact(player, hand);
+	}
+
+	@Override
+	protected ScreenHandler getScreenHandler(int syncId, PlayerInventory playerInventory) {
+		return GenericContainerScreenHandler.createGeneric9x3(syncId, playerInventory, this);
 	}
 
 	@Override
