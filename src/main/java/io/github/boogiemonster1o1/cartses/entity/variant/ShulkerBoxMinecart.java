@@ -17,6 +17,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
@@ -69,6 +71,7 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 				if (!player.isCreative()) {
 					player.getStackInHand(hand).decrement(1);
 				}
+				this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_SLIME_SQUISH, SoundCategory.NEUTRAL, 1.0F, 1.0F);
 			}
 			return ActionResult.CONSUME;
 		}
