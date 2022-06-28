@@ -5,6 +5,7 @@ import io.github.boogiemonster1o1.cartses.entity.CartsesStorageMinecartEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -22,6 +23,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
 public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
@@ -61,20 +63,20 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand) {
-		if (player.isSneaking()) {
-			if (world.isClient) {
-				return ActionResult.SUCCESS;
-			}
-			Item item = player.getStackInHand(hand).getItem();
-			if (item instanceof DyeItem && ((DyeItem) item).getColor().getId() != this.getDyeColor()) {
-				this.setDyeColor(((DyeItem) item).getColor().getId());
-				if (!player.isCreative()) {
-					player.getStackInHand(hand).decrement(1);
-				}
-				this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_SLIME_SQUISH, SoundCategory.NEUTRAL, 1.0F, 1.0F);
-			}
-			return ActionResult.CONSUME;
-		}
+//		if (player.isSneaking()) {
+//			if (world.isClient) {
+//				return ActionResult.SUCCESS;
+//			}
+//			Item item = player.getStackInHand(hand).getItem();
+//			if (item instanceof DyeItem && ((DyeItem) item).getColor().getId() != this.getDyeColor()) {
+//				this.setDyeColor(((DyeItem) item).getColor().getId());
+//				if (!player.isCreative()) {
+//					player.getStackInHand(hand).decrement(1);
+//				}
+//				this.world.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_SLIME_SQUISH, SoundCategory.NEUTRAL, 1.0F, 1.0F);
+//			}
+//			return ActionResult.CONSUME;
+//		}
 		return super.interact(player, hand);
 	}
 
@@ -85,6 +87,16 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 
 	@Override
 	public void dropItems(DamageSource damageSource) {
-		super.dropItems(damageSource);
+		this.kill();
+		if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
+			ItemStack itemStack = new ItemStack(ShulkerBoxBlock.get(DyeColor.byId(this.getDyeColor())));
+			if (this.hasCustomName()) {
+				itemStack.setCustomName(this.getCustomName());
+			}
+			NbtCompound inv = new NbtCompound();
+			this.writeInventoryToNbt(inv);
+			itemStack.getOrCreateNbt().put("Inventory", inv);
+			this.dropStack(itemStack);
+		}
 	}
 }
