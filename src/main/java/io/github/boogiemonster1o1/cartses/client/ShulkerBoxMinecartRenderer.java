@@ -3,6 +3,7 @@ package io.github.boogiemonster1o1.cartses.client;
 import io.github.boogiemonster1o1.cartses.entity.variant.ShulkerBoxMinecart;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
@@ -21,8 +22,7 @@ public class ShulkerBoxMinecartRenderer extends EmissiveMinecartRenderer<Shulker
 			super.renderBlock(entity, delta, state, matrices, vertexConsumers, light);
 		} else {
 			DyeColor dye = DyeColor.byId(color);
-			// TODO
-			super.renderBlock(entity, delta, state, matrices, vertexConsumers, light);
+			super.renderBlock(entity, delta, ShulkerBoxBlock.get(dye).getDefaultState(), matrices, vertexConsumers, light);
 		}
 	}
 }
