@@ -123,7 +123,7 @@ public class CartsesEntityType<T extends CartsesMinecartEntity> extends FabricEn
 			return this;
 		}
 
-		public Builder<T> noRender() {
+		public Builder<T> noRenderer() {
 			this.noRenderer = true;
 			return this;
 		}
