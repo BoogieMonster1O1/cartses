@@ -6,6 +6,7 @@ import io.github.boogiemonster1o1.cartses.entity.CartsesStorageMinecartEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -90,14 +91,19 @@ public class ShulkerBoxMinecart extends CartsesStorageMinecartEntity {
 	public void dropItems(DamageSource damageSource) {
 		this.kill();
 		if (this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-			ItemStack itemStack = new ItemStack(ShulkerBoxBlock.get(DyeColor.byId(this.getDyeColor())));
+			ItemStack itemStack = new ItemStack(this.getItem());
 			if (this.hasCustomName()) {
 				itemStack.setCustomName(this.getCustomName());
 			}
 			NbtCompound inv = new NbtCompound();
 			this.writeInventoryToNbt(inv);
 			itemStack.getOrCreateNbt().put("Inventory", inv);
+			itemStack.getOrCreateNbt().putInt("Color", this.getDyeColor());
 			this.dropStack(itemStack);
 		}
+	}
+
+	@Override
+	public void onBroken(DamageSource source, World world, Entity vehicle) {
 	}
 }

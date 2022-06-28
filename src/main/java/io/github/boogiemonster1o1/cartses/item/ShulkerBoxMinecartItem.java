@@ -17,5 +17,8 @@ public class ShulkerBoxMinecartItem extends CartsesMinecartItem {
 		if (stack.getOrCreateNbt().contains("Inventory")) {
 			((ShulkerBoxMinecart) entity).readInventoryFromNbt(stack.getOrCreateNbt().getCompound("Inventory"));
 		}
+		if (stack.getOrCreateNbt().contains("Color")) {
+			((ShulkerBoxMinecart) entity).setDyeColor(stack.getOrCreateNbt().getInt("Color"));
+		}
 	}
 }
